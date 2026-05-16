@@ -1,0 +1,22 @@
+# HarmonyOS / DevEco / ArkTS
+oh_modules/
+node_modules/
+build/
+.gradle/
+.cxx/
+.externalNativeBuild/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# System
+.DS_Store
+Thumbs.db
+
+# Generated
+entry/build/
