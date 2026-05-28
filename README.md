@@ -71,6 +71,24 @@
 
 用户可以提交文物相关上传内容，包括关联文物、拍摄地点和说明。上传内容默认进入待审核状态，管理员可进行通过或驳回。
 
+## 数据模型设计
+
+当前版本采用前端模拟数据与 HarmonyOS Preferences 轻量持久化相结合的方式，实现登录状态、点赞收藏、浏览记录、上传记录和审核状态的本地保存。若后续接入后端服务，可按以下数据表进行扩展：
+
+| 数据表 | 主要字段 | 说明 |
+| --- | --- | --- |
+| user | id、account、username、phone、email、role、privacyVisible | 保存用户账号、身份角色和隐私状态 |
+| relic | id、name、dynasty、type、hot、intro、imageUrl | 保存文物基础信息、图片路径和热度 |
+| favorite_group | id、userId、name | 保存用户自定义收藏夹分组 |
+| favorite | id、userId、relicId、groupId、createdAt | 保存用户收藏记录 |
+| like_record | id、userId、targetType、targetId、createdAt | 保存文物点赞和评论点赞记录 |
+| browse_history | id、userId、relicId、viewedAt | 保存文物浏览记录 |
+| comment | id、relicId、userId、content、parentId、status、createdAt | 保存评论、回复和审核状态 |
+| user_upload | id、userId、relicName、location、description、imageUrl、status | 保存用户上传照片及审核状态 |
+| audit_log | id、auditorId、targetType、targetId、result、createdAt | 保存审核员的审核操作记录 |
+
+本项目在 `MuseumStore.ets` 中集中维护状态，便于页面共享；在入口页初始化本地 Preferences，保证用户刷新或重新进入应用后仍能恢复主要操作数据。
+
 ## 项目结构
 
 ```text
@@ -80,8 +98,16 @@ mobile-museum-app
 │   └── src/
 │       └── main/
 │           ├── ets/
+│           │   ├── model/
+│           │   │   ├── MuseumModels.ets
+│           │   │   └── MuseumStore.ets
 │           │   └── pages/
-│           │       └── Index.ets
+│           │       ├── Index.ets
+│           │       ├── RelicBrowsePage.ets
+│           │       ├── FavoritePage.ets
+│           │       ├── HistoryPage.ets
+│           │       ├── SearchPage.ets
+│           │       └── MinePage.ets
 │           └── resources/
 │               └── base/
 │                   └── media/
